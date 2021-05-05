@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="FixedBookingsEntities-Web.config Connection String" description="FixedBookingsEntities Connection String used in web.config by the application to access the database." defaultValue="metadata=res://*/Fixed_Bookings_Model.csdl|res://*/Fixed_Bookings_Model.ssdl|res://*/Fixed_Bookings_Model.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=DESKTOP-TVMODV1\SQLEXPRESS;initial catalog=FixedBookings;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework&quot;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Filip\\source\\repos\\Fixed_Booking\\Fixed_Booking\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='FixedBookingsEntities']/@connectionString" />
+  </parameter>
+</parameters>

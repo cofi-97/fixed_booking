@@ -1,0 +1,129 @@
+﻿@model Fixed_Booking.Bookings
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create new fixed booking</h2>
+<br />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script type="text/javascript">
+    $(function () {
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left',
+            minDate: moment().startOf('day'),
+            maxDate: moment().startOf('day').add(61, 'day'),
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        }, function (start, end, label) {
+            var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            $("#DayOfWeek").empty();
+            var dates = [],
+                currentDate = start,
+                addDays = function (days) {
+                    var date = new Date(this.valueOf());
+                    date.setDate(date.getDate() + days);
+                    return date;
+                };
+            while (currentDate <= end) {
+                var newDate = new Date(currentDate).getDay();
+                dates.push(newDate);
+                currentDate = addDays.call(currentDate, 1);
+                var exists = false;
+                for (i = 0; i < document.getElementById("DayOfWeek").length; i++) {
+                    if (document.getElementById("DayOfWeek").options[i].value == newDate) {
+                        exists = true;
+                    }
+                }
+                if (exists == false) {
+                    $("#DayOfWeek").attr('multiple', 'multiple');
+                    $("#DayOfWeek").append($("<option />").val(newDate).text(days[newDate]));
+                }
+            }
+            console.log(dates);
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+            $("#HoursInDay").empty();
+            for (var i = 8; i < 18; i++) {
+                $("#HoursInDay").attr('multiple', 'multiple');
+                $("#HoursInDay").append($("<option />").val(i).text(i));
+
+            }
+        });
+    });
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-inline">
+        <div class="form-group">
+            @Html.DropDownListFor(model => model.Fields, new SelectList(ViewBag.Fields, "FieldId", "FieldName"), htmlAttributes: new { @class = "form-control"})
+            @Html.ValidationMessageFor(model => model.Fields, "", new { @class = "text-danger" })
+        </div>
+        &nbsp
+        <div class="form-group">
+            <span class="glyphicon glyphicon-calendar"></span>
+            @Html.Editor("daterange", new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+        </div>
+        &nbsp
+        <div class="form-group">
+            @Html.DropDownList("DayOfWeek", new SelectList(Enumerable.Empty<SelectListItem>(), "DayIndex", "DayName"), "Nothing to select", htmlAttributes: new { @class = "form-control", @required = "required" })
+            @Html.ValidationMessage("DayOfWeek", "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            @Html.DropDownList("HoursInDay", new SelectList(Enumerable.Empty<SelectListItem>(), "HourTime", "HourText"), "Nothing to select", htmlAttributes: new { @class = "form-control", @required = "required" })
+            @Html.ValidationMessage("HoursInDay", "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <br />
+    <div class="form-horizontal">
+        <br />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CustomerName, "Customer Name", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CustomerName, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                @Html.ValidationMessageFor(model => model.CustomerName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.ContactNumber, "Contact Number", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ContactNumber, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                @Html.ValidationMessageFor(model => model.ContactNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+@{
+    if (TempData["message"] != null)
+    {
+        <p>@TempData["message"]</p>
+    }
+}
+        <div>
+            <button onclick="location.href='@Url.Action("All", "FixedBooking")';return false;" class="btn btn-warning">Back to List</button>
+        </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

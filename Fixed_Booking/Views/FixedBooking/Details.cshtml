@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Fixed_Booking.SingleBookings>
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2 style="text-align:center">Details</h2>
+<br />
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Customer Name")
+        </th>
+        <th>
+            @Html.DisplayName("Contact Number")
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Bookings.Field)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReservedDates.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReservedDates.Time)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bookings.CustomerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bookings.ContactNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bookings.Fields.FieldName)
+            </td>
+            <td>
+                @Convert.ToDateTime(item.ReservedDates.Date).ToShortDateString()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReservedDates.Time)
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "Delete", new { id = item.SingleBookingID, type = 1 }, new { onclick = "return confirm('Are sure you want to delete?');" })
+            </td>
+        </tr>
+    }
+</table>
+@{
+    if (TempData["message"] != null)
+    {
+        <p>@TempData["message"]</p>
+    }
+}

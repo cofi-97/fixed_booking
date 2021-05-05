@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="FixedBookingsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Bookings">
+    <Key>
+      <PropertyRef Name="BookingID" />
+    </Key>
+    <Property Name="BookingID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CustomerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ContactNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Field" Type="Int32" Nullable="false" />
+    <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Fields" Relationship="Self.FK_Bookings_Fields" FromRole="Bookings" ToRole="Fields" />
+    <NavigationProperty Name="SingleBookings" Relationship="Self.FK_SingleBookings_Bookings" FromRole="Bookings" ToRole="SingleBookings" />
+  </EntityType>
+  <EntityType Name="Fields">
+    <Key>
+      <PropertyRef Name="FieldID" />
+    </Key>
+    <Property Name="FieldID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FieldName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="FieldLocation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Sport" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Bookings" Relationship="Self.FK_Bookings_Fields" FromRole="Fields" ToRole="Bookings" />
+    <NavigationProperty Name="Sports" Relationship="Self.FK_Fields_Sports" FromRole="Fields" ToRole="Sports" />
+    <NavigationProperty Name="ReservedDates" Relationship="Self.FK_ReservedDates_Fields" FromRole="Fields" ToRole="ReservedDates" />
+  </EntityType>
+  <EntityType Name="ReservedDates">
+    <Key>
+      <PropertyRef Name="DateID" />
+    </Key>
+    <Property Name="DateID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Time" Type="Time" Nullable="false" Precision="7" />
+    <Property Name="Field" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Fields" Relationship="Self.FK_ReservedDates_Fields" FromRole="ReservedDates" ToRole="Fields" />
+    <NavigationProperty Name="SingleBookings" Relationship="Self.FK_SingleBookings_ReservedDates" FromRole="ReservedDates" ToRole="SingleBookings" />
+  </EntityType>
+  <EntityType Name="SingleBookings">
+    <Key>
+      <PropertyRef Name="SingleBookingID" />
+    </Key>
+    <Property Name="SingleBookingID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BookingID" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Bookings" Relationship="Self.FK_SingleBookings_Bookings" FromRole="SingleBookings" ToRole="Bookings" />
+    <NavigationProperty Name="ReservedDates" Relationship="Self.FK_SingleBookings_ReservedDates" FromRole="SingleBookings" ToRole="ReservedDates" />
+  </EntityType>
+  <EntityType Name="Sports">
+    <Key>
+      <PropertyRef Name="SportID" />
+    </Key>
+    <Property Name="SportID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SportName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Fields" Relationship="Self.FK_Fields_Sports" FromRole="Sports" ToRole="Fields" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_Bookings_Fields">
+    <End Role="Fields" Type="Self.Fields" Multiplicity="1" />
+    <End Role="Bookings" Type="Self.Bookings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Fields">
+        <PropertyRef Name="FieldID" />
+      </Principal>
+      <Dependent Role="Bookings">
+        <PropertyRef Name="Field" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SingleBookings_Bookings">
+    <End Role="Bookings" Type="Self.Bookings" Multiplicity="1" />
+    <End Role="SingleBookings" Type="Self.SingleBookings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Bookings">
+        <PropertyRef Name="BookingID" />
+      </Principal>
+      <Dependent Role="SingleBookings">
+        <PropertyRef Name="BookingID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Fields_Sports">
+    <End Role="Sports" Type="Self.Sports" Multiplicity="1" />
+    <End Role="Fields" Type="Self.Fields" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Sports">
+        <PropertyRef Name="SportID" />
+      </Principal>
+      <Dependent Role="Fields">
+        <PropertyRef Name="Sport" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ReservedDates_Fields">
+    <End Role="Fields" Type="Self.Fields" Multiplicity="1" />
+    <End Role="ReservedDates" Type="Self.ReservedDates" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Fields">
+        <PropertyRef Name="FieldID" />
+      </Principal>
+      <Dependent Role="ReservedDates">
+        <PropertyRef Name="Field" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SingleBookings_ReservedDates">
+    <End Role="ReservedDates" Type="Self.ReservedDates" Multiplicity="1" />
+    <End Role="SingleBookings" Type="Self.SingleBookings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ReservedDates">
+        <PropertyRef Name="DateID" />
+      </Principal>
+      <Dependent Role="SingleBookings">
+        <PropertyRef Name="Date" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="FixedBookingsEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Bookings" EntityType="Self.Bookings" />
+    <EntitySet Name="Fields" EntityType="Self.Fields" />
+    <EntitySet Name="ReservedDates" EntityType="Self.ReservedDates" />
+    <EntitySet Name="SingleBookings" EntityType="Self.SingleBookings" />
+    <EntitySet Name="Sports" EntityType="Self.Sports" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <AssociationSet Name="FK_Bookings_Fields" Association="Self.FK_Bookings_Fields">
+      <End Role="Fields" EntitySet="Fields" />
+      <End Role="Bookings" EntitySet="Bookings" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SingleBookings_Bookings" Association="Self.FK_SingleBookings_Bookings">
+      <End Role="Bookings" EntitySet="Bookings" />
+      <End Role="SingleBookings" EntitySet="SingleBookings" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Fields_Sports" Association="Self.FK_Fields_Sports">
+      <End Role="Sports" EntitySet="Sports" />
+      <End Role="Fields" EntitySet="Fields" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ReservedDates_Fields" Association="Self.FK_ReservedDates_Fields">
+      <End Role="Fields" EntitySet="Fields" />
+      <End Role="ReservedDates" EntitySet="ReservedDates" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SingleBookings_ReservedDates" Association="Self.FK_SingleBookings_ReservedDates">
+      <End Role="ReservedDates" EntitySet="ReservedDates" />
+      <End Role="SingleBookings" EntitySet="SingleBookings" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

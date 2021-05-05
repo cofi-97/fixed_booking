@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Fixed_Booking.Bookings>
+
+@{
+    ViewBag.Title = "All";
+}
+
+<h2 style="text-align:center">List of all fixed bookings</h2>
+<br />
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Created on")
+        </th>
+        <th>
+            @Html.DisplayName("Customer Name")
+        </th>
+        <th>
+            @Html.DisplayName("Contact Number")
+        </th>
+        <th>
+            @Html.DisplayName("Start Date")
+        </th>
+        <th>
+            @Html.DisplayName("End Date")
+        </th>
+        <th>
+            @Html.DisplayName("Comment")
+        </th>
+        <th>
+            @Html.DisplayName("Field Name")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fields.FieldName)
+            </td>
+            <td>
+                @Html.ActionLink("View", "Details", new { id = item.BookingID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.BookingID, type = 2 }, new { onclick = "return confirm('Are sure you want to delete?');" })
+            </td>
+        </tr>
+    }
+
+</table>
+<div>
+    <button onclick="location.href='@Url.Action("Create", "FixedBooking")';return false;" class="btn btn-primary">Create new</button>
+</div>
+@{
+    if (TempData["message"] != null)
+    {
+        <br />
+        <p>@TempData["message"]</p>
+    }
+}
